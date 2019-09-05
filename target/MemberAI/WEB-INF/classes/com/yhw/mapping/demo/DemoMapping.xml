@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--此处要写dao的完全限定名-->
+<mapper namespace="com.yhw.dao.demo.DemoDao">
+    <!--返回值类型可以用实体类来接收，首字母小写的最简单的名字-->
+    <select id="getReasonByVcode" resultType="demoEntity"> //com.yhw.domain.DemoEntity
+        <!-- #{随意写}-->
+        SELECT * FROM yun_calcelreason_3ch WHERE  vcode = #{vcode}
+
+    </select>
+
+    <select id="updateReasonByVcode">
+        <!-- #{随意写}-->
+
+        UPDATE yun_calcelreason_3ch <set> vcode=22222</set>WHERE  vcode = #{vcode}
+    </select>
+
+    <select id="getUserNameById" resultType="java.lang.String">
+        <!-- #{随意写}-->
+        SELECT user_name FROM acl_account WHERE  id = #{id}
+
+    </select>
+
+    <select id="getName" resultType="java.lang.String">
+
+        SELECT VNAME from yun_calcelreason_3ch where vcode=#{vcode}
+    </select>
+
+
+    <select id="getName1" resultType="java.lang.String">
+
+  SELECT VNAME from yun_calcelreason_3ch where vcode=#{vcode}
+    </select>
+
+    <select id="getName2" resultType="java.lang.String">
+        select vname from yun_calcelreason_3ch where pk_group=#{demoEntity2.pkGroup} and vcode =#{demoEntity.vcode}
+    </select>
+
+    <select id="getName3" resultType="java.lang.String" parameterType="map">
+
+          SELECT VNAME from yun_calcelreason_3ch where pk_group=#{pkGroup}  and vcode=#{vcode}
+
+    </select>
+
+    <select id="getName4" resultType="java.lang.String" parameterType="list">
+--不可用
+        SELECT VNAME from yun_calcelreason_3ch where  vcode=2222
+
+    </select>
+</mapper>

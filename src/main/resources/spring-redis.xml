@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- redis配置文件路径 -->
+    <context:property-placeholder order="1" location="classpath:redis.properties" ignore-unresolvable="true"/>
+
+    <!-- 连接池config参数 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.pool.maxIdle}" />
+        <property name="minIdle" value="${redis.pool.minIdle}" />
+        <property name="maxTotal" value="${redis.pool.maxTotal}" />
+        <property name="maxWaitMillis" value="${redis.pool.maxWaitMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}"></property>
+        <property name="numTestsPerEvictionRun" value="${redis.pool.numTestsPerEvictionRun}"></property>
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}"></property>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}" />
+        <property name="testOnReturn" value="${redis.pool.testOnReturn}" />
+        <property name="testWhileIdle" value="${redis.pool.testWhileIdle}"></property>
+    </bean>
+    <!-- 实例化连接池 -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="poolConfig" ref="jedisPoolConfig" />
+        <property name="hostName" value="${redis.host}" />
+        <property name="port" value="${redis.port}" />
+        <property name="password" value="${redis.pwd}" />
+        <property name="database" value="${redis.database}" />
+        <property name="timeout" value="${redis.timeout}" />
+    </bean>
+
+    <!--redis操作模版,使用该对象可以操作redis  -->
+    <!--spring 封装了 RedisTemplate 对象来进行对redis的各种操作，它支持所有的 redis 原生的 api。-->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+
+        <!-- 序列化方式 建议key/hashKey采用StringRedisSerializer -->
+        <!--如果不配置Serializer，那么存储的时候缺省使用String，如果用User类型存储，那么会提示错误User can't cast to String！！  -->
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer" />
+        </property>
+        <!-- 开启REIDS事务支持 -->
+        <property name="enableTransactionSupport" value="true" />
+    </bean>
+
+    <!-- 对string操作的封装 -->
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <constructor-arg ref="jedisConnectionFactory" />
+        <!-- 开启REIDS事务支持 -->
+        <property name="enableTransactionSupport" value="false" />
+    </bean>
+
+    <bean id="testBean" class="com.yhw.domain.demo.TestBean">
+        <property name="s" value="3"/>
+
+    </bean>
+    <bean id="redisUtil" class="com.yhw.util.RedisUtil">
+        <property name="redisTemplate" ref="redisTemplate"/>
+        <property name="stringRedisTemplate" ref="stringRedisTemplate"/>
+    </bean>
+
+
+</beans>

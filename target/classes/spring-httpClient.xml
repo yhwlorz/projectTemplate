@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+
+    <!-- http配置文件路径 -->
+    <context:property-placeholder order="1" location="classpath:httpClient.properties" ignore-unresolvable="true"/>
+
+
+    <!-- 定义httpclient连接池 -->
+    <bean id="httpClientConnectionManager" class="org.apache.http.impl.conn.PoolingHttpClientConnectionManager" destroy-method="close" >
+
+        <!-- 设置每个地址的并发数 -->
+        <property name="defaultMaxPerRoute" value="${http.pool.defaultMaxPerRoute}"></property>
+        <!-- 设置连接总数 -->
+        <property name="maxTotal" value="${http.pool.maxTotal}"></property>
+    </bean>
+
+    <!-- 定义 HttpClient工厂，这里使用HttpClientBuilder构建-->
+    <bean id="httpClientBuilder" class="org.apache.http.impl.client.HttpClientBuilder" factory-method="create">
+        <property name="connectionManager" ref="httpClientConnectionManager"></property>
+    </bean>
+
+    <!-- 得到httpClient的实例 -->
+    <bean id="httpClient" factory-bean="httpClientBuilder" factory-method="build"/>
+
+    <!-- 定期清理无效的连接 -->
+    <bean class="com.yhw.util.ClearConnectionsHandler" destroy-method="shutdown">
+        <constructor-arg index="0" ref="httpClientConnectionManager"/>
+    </bean>
+
+    <bean id = "httpProxy" class="org.apache.http.HttpHost">
+        <constructor-arg name="hostname" value="127.0.0.1" index="0" type="java.lang.String"/>
+        <constructor-arg name="port" value="8888" index="1" type="int"/>
+        <constructor-arg name="scheme" value="http" index="2" type="java.lang.String"/>
+    </bean>
+
+    <!-- 定义requestConfig的工厂 -->
+    <bean id="requestConfigBuilder" class="org.apache.http.client.config.RequestConfig.Builder">
+        <!-- 代理 -->
+<!--
+        <property name="proxy" ref="httpProxy"/>
+-->
+        <!-- 从连接池中获取到连接的最长时间 -->
+        <property name="connectionRequestTimeout" value="${http.request.connectionRequestTimeout}"/>
+        <!-- 创建连接的最长时间 -->
+        <property name="connectTimeout" value="${http.request.connectTimeout}"/>
+        <!-- 数据传输的最长时间 -->
+        <property name="socketTimeout" value="${http.request.socketTimeout}"/>
+        <!-- 提交请求前测试连接是否可用 -->
+        <property name="staleConnectionCheckEnabled" value="${http.request.staleConnectionCheckEnabled}"/>
+        <!-- 跟随重定向 false,关闭；true,开启 -->
+        <property name="circularRedirectsAllowed" value="false"/>
+
+    </bean>
+
+
+
+    <!-- 得到requestConfig实例 -->
+    <bean id="requestConfig" factory-bean="requestConfigBuilder" factory-method="build" />
+
+    <!-- HttpUtil -->
+    <bean id="httpUtil" class="com.yhw.util.HttpUtil">
+        <property name="httpClient" ref="httpClient"/>
+        <property name="requestConfig" ref="requestConfig"/>
+    </bean>
+
+<!--
+    <context:component-scan base-package="com.yhw.service.orderOperate.meituan"/>
+-->
+
+</beans>

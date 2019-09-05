@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--以下可能要修改：service类、domain实体类、mapping文件、dao类的包位置-->
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    <!-- 自动扫描,注册成bean。可通过include-filter过滤要扫描的注解类型 -->
+    <!-- 在xml配置了这个标签后，spring可以自动去扫描base-pack下面或者子包下面的java文件，如果扫描到有@Component @Controller@Service等这些注解的类，则把这些类注册为bean-->
+    <context:component-scan base-package="com.yhw.pageObject,com.yhw.service,com.yhw.manage.aspect"/>
+    <!--
+        <context:component-scan base-package="com.yhw.service.orderOperate"/>
+    -->
+
+    <!-- 激活自动代理功能 -->  <!--proxy-target-class等于true是强制使用cglib代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+    <!-- 加载资源文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:jdbc.properties"/>
+    </bean>
+
+    <!--配置数据源:c3p0 第0个  -->
+    <bean id="dataSource_takeout_local" class="com.mchange.v2.c3p0.ComboPooledDataSource" lazy-init="true">
+        <property name="driverClass" value="${jdbc.driverClassName_tackout_local}"/>
+        <property name="jdbcUrl" value="${jdbc.url_tackout_local}"/>
+        <property name="user" value="${jdbc.username_tackout_local}"/>
+        <property name="password" value="${jdbc.password_tackout_local}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+    <!--配置数据源:c3p0 第一个  -->
+    <bean id="dataSource_takeout_pre" class="com.mchange.v2.c3p0.ComboPooledDataSource" lazy-init="true">
+        <property name="driverClass" value="${jdbc.driverClassName_tackout_pre}"/>
+        <property name="jdbcUrl" value="${jdbc.url_tackout_pre}"/>
+        <property name="user" value="${jdbc.username_tackout_pre}"/>
+        <property name="password" value="${jdbc.password_tackout_pre}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dynamicDataSource"/>
+    </bean>
+    <!--配置数据源:c3p0 第二个  -->
+    <bean id="dataSource_account_pre" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName_account_pre}"/>
+        <property name="jdbcUrl" value="${jdbc.url_account_pre}"/>
+        <property name="user" value="${jdbc.username_account_pre}"/>
+        <property name="password" value="${jdbc.password_account_pre}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+
+    <!--配置数据源:c3p0 第三个  -->
+    <bean id="dataSource_takeout_ttt" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName_tackout_ttt}"/>
+        <property name="jdbcUrl" value="${jdbc.url_tackout_ttt}"/>
+        <property name="user" value="${jdbc.username_tackout_ttt}"/>
+        <property name="password" value="${jdbc.password_tackout_ttt}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+
+    <!--配置数据源:c3p0 第四个  -->
+    <bean id="dataSource_account_ttt" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName_account_ttt}"/>
+        <property name="jdbcUrl" value="${jdbc.url_account_ttt}"/>
+        <property name="user" value="${jdbc.username_account_ttt}"/>
+        <property name="password" value="${jdbc.password_account_ttt}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+
+    <!--配置数据源:c3p0 第五个  -->
+    <bean id="dataSource_takeout_tst" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="driverClass" value="${jdbc.driverClassName_tackout_tst}"/>
+        <property name="jdbcUrl" value="${jdbc.url_tackout_tst}"/>
+        <property name="user" value="${jdbc.username_tackout_tst}"/>
+        <property name="password" value="${jdbc.password_tackout_tst}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+
+    <!--配置数据源:c3p0 第六个  -->
+    <bean id="dataSource_account_tst" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
+        <property name="driverClass" value="${jdbc.driverClassName_account_tst}"/>
+        <property name="jdbcUrl" value="${jdbc.url_account_tst}"/>
+        <property name="user" value="${jdbc.username_account_tst}"/>
+        <property name="password" value="${jdbc.password_account_tst}"/>
+        <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
+        <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
+        <property name="autoCommitOnClose" value="${c3p0.autoCommitOnClose}"/>
+        <property name="checkoutTimeout" value="${c3p0.checkoutTimeout}"/>
+        <property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}"/>
+    </bean>
+    <!--配置数据源:dbcp  -->
+    <!--   <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+             destroy-method="close">
+           <property name="driverClassName" value="${jdbc.driverClassName}" />
+           <property name="url" value="${jdbc.url}" />
+           <property name="username" value="${jdbc.username}" />
+           <property name="password" value="${jdbc.password}" />
+           &lt;!&ndash; 初始化连接大小 &ndash;&gt;
+           <property name="initialSize" value="${initialSize}"></property>
+           &lt;!&ndash; 连接池最大数量 &ndash;&gt;
+           <property name="maxActive" value="${maxActive}"></property>
+           &lt;!&ndash; 连接池最大空闲 &ndash;&gt;
+           &lt;!&ndash;property name="maxIdle" value="${maxIdle}"></property&ndash;&gt;
+           &lt;!&ndash; 连接池最小空闲 &ndash;&gt;
+           <property name="minIdle" value="${minIdle}"></property>
+           &lt;!&ndash; 获取连接最大等待时间 &ndash;&gt;
+           <property name="maxWait" value="${maxWait}"></property>
+       </bean>-->
+    <!-- spring和MyBatis完美整合,，不需要mybatis的配置映射文件 -->
+    <!--动态数据源的配置,根据设置的key 获得value，获得jdbc配置，切换数据源-->
+    <bean id="dynamicDataSource" class="com.yhw.common.dataSource.AutoSwitchDataSource">
+        <property name="targetDataSources">
+            <map key-type="java.lang.String">
+                <entry value-ref="dataSource_takeout_local" key="takeout_local"/>
+                <entry value-ref="dataSource_takeout_pre" key="takeout_pre"/>
+                <entry value-ref="dataSource_account_pre" key="account_pre"/>
+                <entry value-ref="dataSource_takeout_ttt" key="takeout_ttt"/>
+                <entry value-ref="dataSource_account_ttt" key="account_ttt"/>
+                <entry value-ref="dataSource_takeout_tst" key="takeout_tst"/>
+                <entry value-ref="dataSource_account_tst" key="account_tst"/>
+            </map>
+        </property>
+        <property name="defaultTargetDataSource" ref="dataSource_takeout_pre">
+        </property>
+    </bean>
+
+    <!-- 配置SqlSessionFactory对象 -->
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean" lazy-init="true" scope="prototype">
+        <!-- 指定数据源 --><!-- 注入数据库连接池 -->
+        <property name="dataSource" ref="dynamicDataSource"/>
+        <!-- 自动扫描实体类，分配别名 -->
+        <property name="typeAliasesPackage" value="com.yhw.domain"/>
+        <!-- 具体指定xml文件，可不配 --> <!-- 指定mybatis 的配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 自动扫描mapping.xml文件，**表示迭代查找 ,,也可在mybatis-config.xml中单独指定xml文件 -->
+        <!-- <property name="mapperLocations" value="classpath:mapper/*.xml"/>-->
+        <property name="mapperLocations" value="classpath:com/yhw/mapping/**/*.xml"/>
+    </bean>
+    <!-- 自动扫描com/hys/app/**/dao下的所有dao接口，并实现这些接口，可直接在程序中使用dao接口，不用再获取sqlsession对象 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--
+        basePackage 属性是映射器接口文件的包路径。
+                 你可以使用分号或逗号 作为分隔符设置多于一个的包路径
+        -->
+        <property name="basePackage" value="com.yhw.dao"/>
+        <!--
+                 因为会自动装配 SqlSessionFactory和SqlSessionTemplate
+                 所以没 有 必 要 去 指 定 SqlSessionFactory或 SqlSessionTemplate
+                 因此可省略不配置；
+                 但是,如果你使 用了一个 以上的 DataSource，那么自动装配可能会失效。
+                 这种 情况下，你可以使用sqlSessionFactoryBeanName或sqlSessionTemplateBeanName属性来设置正确的 bean名称来使用；
+        -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+    <!-- 事务管理器-->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dynamicDataSource" />
+    </bean>
+    <!-- 基于注释的事务，当注释中发现@Transactional时，使用id为“transactionManager”的事务管理器  -->
+    <!-- 如果没有设置transaction-manager的值，则spring以缺省默认的事务管理器来处理事务，默认事务管理器为第一个加载的事务管理器 -->
+    <!-- 优先级：如果配置冲突，注解的比xml的高 -->
+    <!--
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    -->
+    <!-- 配置事务的传播特性 ，配置add、delete和update开始的方法，事务传播特性为required -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="del*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="modify*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="edit*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="loginBoh*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="regist*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.Exception"/>
+            <tx:method name="getAll*" propagation="REQUIRED" read-only="true" />
+            <tx:method name ="find*" read-only="true" />
+            <tx:method name ="query*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <!-- 配置哪些类的方法进行事务管理 -->
+    <aop:config>
+        <aop:pointcut id="allManagerMethod" expression="execution (* com.yhw.service.*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="allManagerMethod" />
+    </aop:config>
+
+    <!-- 配置AOP -->
+    <aop:config >
+        <!-- 切点 -->
+        <aop:pointcut expression ="execution(* com.yhw..*.service..*.*(..))"
+                      id= "service" />
+        <!-- 注意切换数据源操作要比持久层代码先执行 -->
+        <aop:advisor advice-ref ="txAdvice" pointcut-ref="service" />
+    </aop:config >
+
+    <!--
+        <bean class="com.yhw.util.BeanPostProcessorDemo"/>
+    -->
+
+</beans>
