@@ -26,7 +26,7 @@
     <!-- servlet版本号 -->
     <servlet.version>3.1.0</servlet.version>
     <!-- mysql4java版本号 -->
-    <mysqlJava.version>5.1.45</mysqlJava.version>
+    <mysqlJava.version>8.0.16</mysqlJava.version>
     <!-- jackson包版本 -->
     <jackson.version>2.9.0</jackson.version>
     <fastjson.version>1.2.45</fastjson.version>
