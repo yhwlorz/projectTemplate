@@ -31,7 +31,7 @@
     <jackson.version>2.9.0</jackson.version>
     <fastjson.version>1.2.45</fastjson.version>
     <!-- junit版本号 -->
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <!-- testng版本号 -->
     <testng.version>6.13.1</testng.version>
     <!-- log4j日志文件管理包版本 -->
